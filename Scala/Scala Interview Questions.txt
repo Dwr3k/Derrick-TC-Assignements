@@ -1,0 +1,80 @@
+
+What is a trait ?
+	-Traits are like java iterfaces but can include fields and actually have implemented methods, 
+	-can be attached to specific instances of an object, and support multiple inheritance
+
+Difference between trait and sealed trait?
+	-Sealad keyword provides exhustive checking functionality, meaning that all members of a sealed trait must be declared in the same file
+
+What is an abstract class?
+	-Class that provides us with methods and fields that may or may not be concrete that is then extended by another class, used to achieve program abstraction
+
+What is the difference between an java interface and a scala trait?
+	-Scala traits can have concrete methods and fields, have multiple inheritance even if its other traits while still avoiding the diamond problem,
+	-and can be added to an individual object instance
+
+What is a singleton
+	-Scalas version of static that defines a single object of class or object that also provides an entry point for your program execution
+
+What is a higher order function?
+	-Functions that use other functions as input or return a function object as output
+
+What is a closure
+	-Functions that use free variables to determine their output, using a var as the free vairbale leads to it becoming an impure function, while val would keep it pure
+
+What is a companion object?
+	-An object that holds the same name as the class and is made in the same file as the class that has the ability to access both the private methods and fields of that class
+
+Nil vs Null vs null vs Nothing vs None vs Unit
+	-Nil - empty lists or collections of zero
+	-Null - A trait
+	-null - An instance of Null trait similar to java Null
+	-Nothing - USed for if a method never return (it cannont complete normally bt returning)
+	-None - Subclass of optional type
+	-Unit - Equivalent to java void
+
+What is pure function?
+	-A function in which the variable passed to it is not changed and also returns the same output given the same input
+
+11.   What is SBT and how have you used it?
+	-Scala build tool that can build, execute, and package scala files. When working on scala projects 
+	-I use mainly use the REPL feature to test out bits of scala code that im workign on
+
+What is currying?
+	-The process of transforming a function, whether it be changing the definition of a function or changing it into a fucntion that takes less aruguments
+	i.e def add(x: Int, y:Int) = x+y;
+	i.e def add(x: Int) = (y: Int) => x+y; <- called with add(20)(19)
+
+Difference between currying and higher-order functions
+	-High order functions do not have to return a function while Curried ones always return a function,
+	-generally only have one argument, making all curried functions high order functions
+
+Difference between var and val?
+	-Vars are mutable while Vals are not
+
+15.   What is case class?
+	-A class used mainly in pattern matching that will do some function based off of the input variables given to it (think like an obtuse switch)
+
+16.   Why/when to use case class? Example
+	-Used mainly for pattern matching and used in functional programming since it operates off a given input, and genarlly does some output without changing anything else, also saves time since it has common inbuilt methods (get/sets, equals, ect) and can inately match objects inside itself and implements serializable, however it cant inherit from another case class
+
+17.   Difference between case class and normal class?
+	-Case class has built in commonly used methods such as getters and setter, equals, toString ect, generally do not change as they are used as data representation
+
+18.   Scala type hierarchy?
+	-Any - The root of Scala class hierachery and is abstract
+	-AnyVal - Any value type
+	-AnyRef - Any reference type
+	-Numeric - Numeric data types as well as integral data types (includes char)
+	-Boolean
+	-Char
+	-Unit
+	-Nothing and Null
+
+19.   What are partially applied functions?
+	-A function in which you can pass in only some of the parameters when you call it and it doesnt throw an exception,
+	-achieved by using an _ to replace any parameter you dont want to pass in 
+
+20.   What is tail recursion
+	-Tail recursion is a recursive function in which the recursive call is the last thing done by the function,
+	-can use the @tailrec annotation to see if a function is tail recursive or not

@@ -1,0 +1,88 @@
+Explain Hadoop Architecture
+	-HDFS = Distributed Storage
+		-Stores and replicates incoming data across multiple nodes
+	-YARN = Cluster REsource Management
+		-Handles resource management for the nodes in HDFS 
+	-Map-reduce = Processing Framework
+		-Layer that analyzeses and processes datasets coming into the cluster
+	
+Configuration files used during hadoop installation
+	-Read-only defualt configuration
+		-src/core/core-default.xml, src/hdfs/hdfs-default.xml, src/mapred/mapred-default.xml
+	-Site-specific configuration 
+		-conf/core-site.xml, conf/hdfs-site.xml, conf/mapred-site.xml
+
+Difference between Hadoop fs and hdfs dfs
+	-Hadoop fs = Can be used for any file system (local, hdfs, ect)
+	-Hdfs dfs = Used for operatons realted to the HDFS
+
+Difference between Hadoop 2 and Hadoop 3
+	-3 Uses erasure coding to optimize replication space, can automatically recover from name node failure, saves over 150% in overhaed space for storage space
+	
+What is replication factor ? why its important
+	-The replication factor is how many times a block is copied (defualt 3)
+	-Its important so you know how many backups of data youll have and could effect how much you have to spend in storage
+
+What if Datanode fails?
+	-If a datanode fails the name node will create another copy of the datanode (it uses one of the copies already made presumably) where it is then considered a fresh node
+
+What if Namenode fails?
+	-The admin makes a secondary name node the new name node which is synchronized by looking at the location where the fsimage and editlogs are shared.
+
+Why is block size 128 MB ? what if I increase or decrease the block size
+	-We dont waste any bits when we stock data in memory and its a nice inbetween in terms of being big enough to avoid the small file problem and being too big to where the system has to wait a while for data processing
+	-If you increase the block size you will decrease the load on the Namenode since there are less metadata files bein generated
+	-If you were to decrease the block size you will increase the load on the NN and also need more storage since more metadata files are being made
+
+Small file problem
+	-It is the problem that when a lot of small files are stored, more metadata files are created, resulting in more storage space being needed
+
+What is Rack awareness?
+	-The concept of choosin the closest data node for serving a purpose
+
+What is SPOF ? how its resolved ?
+	-Single Point of Failure, when the namenode fails, the whole system fails
+	-Its resolved by the addition of the secondary name node that will automatically take over if the namenode fails
+
+Explain zookeeper?
+	-When a cluster updates their status in a zookeeper node, the zookeeper node will then in turn infomr the rest of the cluster of the nodes staus change, keeping all nodes in sync with each other
+
+Difference between -put and -CopyFromLocal?
+	-CopyFromLocal copies a file from local storage onto the HDFS
+	-Put is the opposite of that
+
+What is erasure coding?
+	-Hadoops implements RAID stripping that logically stores the data in the form of a block and ten stores it on a different disk with each blocks parity. If the data needs to be recovered, its recovered through pariety
+
+What is speculative execution?
+	-When most of the jobs are almost finished, Hadoop will schedule the same job across multiple nodes that arent currently doing anything, whichever node finishes first becomes the real copy and the other nodes abandon their tasks. Helps get around the problem of certain nodes being slower than others, slowing down overall efficiency
+
+Explain Yarn Architecture
+	-Client - Submits the map-reduce jobs
+	-Resource Manager - Responsible for resurce assignment and management among all the applications 
+	-Scheduler = Part of RM that Performs scheduling based on the availanble resources and current applications
+	-Application Manager - Part of RM that is repsonsible for accepting the application and negotiating the first container from the RM, restarts AM container if task fails
+	-Node Manager - Manages application and workflow of a node, also creates the container for application master
+	-Application Master = Negotiates resources with the RM, tracks and monitors staus of an application, periodically sends health reporst to RM
+	-Container = Collection of physical resources on a single node
+
+
+How does ApplicationManager and Application Master  differ
+	-ApplicationManager = Contacts NodeManager for slave container and requests it to create a container then monitors the process and will restart the process in the event of failire
+	-ApplicationMaster = calculates the needed resources to finish tasks,  then when job completes, sends result back to client application
+
+
+Explain Mapreduce working?
+	Map - Takes input data and produces a list of key values pairs
+	Reduce - Uses the user-definied reduce function on kv pair list to produce some singular output
+
+How many mappers are created for 1 GB file?
+	-8 = 1 x 1024 / 128
+How many reducers are created for 1 GB file?
+	-1 gb, (1 per gb)
+
+What is combiner?
+	-It summarizes the mapper output records with the same key, reducing the amount of times the reducer has to run
+
+What is partitioner?
+	It partitions the key-value pairs of intermediate map-outputs on some user defined condition

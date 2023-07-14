@@ -1,0 +1,40 @@
+What is init keyword ?
+	-It is the keyword to define a constructor in python, used as __init__
+
+What is self keyword ?
+	-It is the keyword to reference the current instance of the class and its variables (does not actually have to be named self)
+
+What is lambda functon?
+	- Lambda functions are anonomys functions that are generally only used once to achieve some result, use lambda keyword to start lambda function
+
+Difference between lambda and normal function?
+	-Lambda functions can only contain a single expression, is not named, has faster execution while having a smaller limit to what functions it can actually accomplish and are 		-generally harder to interpret compared to normal functions
+
+What are generators?
+	-Like a normal function but YIELDS insteads of RETURNS, it becomes a generator object thats output is iterable,
+	-meaning it is used in for loops are by calling the next function on it to get its next output
+
+Python is compiled or interpreted language ? what does it mean?
+	-Python is a compiled language, when you run a python script it checks the program syntax, converts it into byte code, 
+	and loads it into system memory where it is then executed from.
+
+What is the difference between list and tuples in Python?
+	-lists are mutable, better for operating on (things like insertion and deletion), have built in methods but consume more memory and are slower to iterate
+
+What is the difference between list and set in Python?
+	-Sets can not contain duplicates, are unordered, and can only hold objects of hashable value
+
+When to use dictionary?
+	-When we want to maintain a key-value pair that we can easily look up with the key
+
+What are decorators?
+	-Decorators are functions that use other functions as input to modify overall function output, The functions used as input will be used in some inner function to accomplish this
+
+What are Iterators?
+	-Objects that contain all the values of a collection that have the ability to traverse said collection
+
+What is slicing?
+	-Slicing is the act of returning only a part of a collection, by way of [] (think getting a string substring)
+
+What is mutable and immutable?
+	-Built in datatypes and tuples are immutable, while sets and dictionaries are
