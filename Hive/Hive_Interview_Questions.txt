@@ -1,0 +1,49 @@
+Why hive metadata is stored in sql?
+	-To give hive the functionality to act like most other relational databses, as well giving hive the ability to use external databases
+
+Which sql is the default database for hive?
+	-HiveQL
+
+What is managed table?
+	-Table thats created interanally in hive that has all of its infomration stored in hive metastore
+
+What is external table?
+	-A table thats made from reading some external file that hive creates a table out of, only storing the metadata for that file in hive
+
+When do we use external table?
+	-When we have records in some external place that will be read from by more than just hive so other applications dont have to go through hive to get to the data
+
+Diff between managed and external table?
+	Managed
+		-Can only be used by Hive
+		-All data is stored interannly in Hive metastore
+		-Dropping table will also delete all data assciated with it
+	External
+		-Data can be used by more than one application
+		-Can drop table from hive but still have data
+		-Hive only stores table metadata
+
+What happens if you don’t provide location to external table?
+	-Hive wont know where to look for the table data to create the table from
+
+Performance optimization in hive?
+	-Using partion and buckets
+	-Indexing
+	-Using ORC and parquet files
+	-Caching
+
+Explain partition table. Give example
+	-Table that will organize data into certain subsets based off of key value
+	-A table that has birth records by month would probably partiton the data into month subsections
+
+Explain bucket table. Give example
+	-Table that data is split into predefined buckets that a value wil fall into
+	-Hive will do a has function on the value and use that to determine which bucket it falls in
+	-making a table with user_id, and country string, bucketing by the user_id but partitioning on country string
+
+Diff between partition and bucketed table.
+	-Partioned
+		-Partitions automatiaclly made based off some distribution of keys in table
+	-Bucketed
+		-Like partitions, but buckets are predefined range of values that use makes that data is seperated into
+	

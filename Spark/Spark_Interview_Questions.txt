@@ -1,0 +1,255 @@
+Describe the architecture of Spark
+	-Spark Driver
+		-Central and entry point of Spark that takes care of that will schedule tasks for execution
+	-Executor - Executes a job that the driver program made
+	-Cluster Manager - Allocates resources and coordinates execution of spark across a cluster
+	-Worker Nodes - Physical machine where exectuion happens
+What is a cluster manager? Which ones have you used?
+	-It allocates resources and coordinates exectiion of spark across the cluster, Ive used YARN mainly as my cluster manager
+Difference between SparkContext and SparkSession
+	-SparkContext - initial entrypoint intospark thats mainly used for interacting with RDDs and other low level operations
+	-SparkSession - Current entrypoint for spark that has more functionality to work with structured apis (DataFrames and Sets)
+
+Describe spark modes to execute the program.
+	-Local 
+		- Running on local machine (i.e executing from pycharm or intellij)
+	-Client
+		- Driver is started on local machine, but executors run on cluster
+	-Cluster
+		-Spark job submitted  from local machine to cluster machine
+		-Driver and executor run from cluster 
+
+Difference between RDD and DF
+	RDD - (R)esilient (D)istributed (D)ataset
+		-Fault-tolerant partions of records that can be concurrently operated
+		-Mainly used for unstructered and strongly typed data
+	DF - (D)ata (F)rame
+		-Data structure thats like a table in a database
+		-Generally used for structured and loosely typed data
+
+Transformation vs Action
+	-Transformation - Spark operation that reads and manipulates a dataframe
+		-evaluated lazily
+	-Action - Spark operation that returns a result or writes to a disk
+		-evaluated eagerly
+
+Narrow transformation vs Wide transformation
+	Narrow - Doesnt require any shuffling between executor or worker nodes
+	Wide - Does require shuffling between nodes
+
+What is lazy evaluation
+	-Spark will not do any transformations until an action is called
+	-Gives spark the chance to make optomization decisions
+
+What is DAG?
+	-(D)irected (A)cyclic (G)raph
+		-D - Operations are executed in a specific order
+		-A- There are no loops or cycles in execution plan
+		-Graph that represents logical execution of a spark job
+		-Shows operations as stages
+		
+What is lineage?
+	-A feature of RDDs that keep track of all transformations, their data source, destination, ect.
+	-If the executor fails in computing data, it can go back to a "last checkpoint" and recompute the data based off the lineage
+
+Difference between DAG and Lineage?
+	-DAG is a high level representation of how spark will execute a program based off transformations and actions to RDDs
+	-Lineage is the information needed to create an RDD
+
+What happens when you submit a spark job
+	-The cluster starts the driver and sets up the spark enviroment according to any parameters you have passed
+	-Driver is then started and initalizes spark, where it begins to make a DAG based off the code in your application
+	-Driver then submits jobs to the cluster manager for execution, which then the cluster manager will schedule the tasks throught the cluster
+	-Tasks and data shuffling are then completed in executor nodes and results are returned back to the driver
+	-After all task are done, driver writes results to storage, and shuts down application
+
+Client mode vs cluster mode
+	-Client Mode
+		-Driver is started on local machine, executors on cluster
+		-Suitable for further testing and debugging
+	-Cluster Mode
+		-For production employements
+		-Driver is run within the cluster leading to better resource utilization and fault tolerance
+
+Difference between a DF and a DS
+	-Dataframe
+		-Finds analysis errors at runtime
+		-Faster than DF
+		-Very scala centric
+	-Dataset
+		-Implements encoders to translate between JVM and spark binary
+		-Evolution of Dataframe
+		-slower than DF
+		-Not great for interactive analysis
+		-Can catach errors at complile time
+
+Difference between a Pandas DF and a Spark DF
+	-Spark
+		-Supports parralization
+		-Multiple nodes
+		-Lazily executed
+		-Immutable
+		-Processes fasters
+		-Has fault tolerance
+		-Supports many mroe features
+	-Pandas
+		-Complex operations generally easier to perform
+		-Mutuable
+		-Automatic Opeomization
+		-Does not have small file issue
+
+Coalesce vs repartition
+	-Repartition
+		-Does a full shuffle of the data, making new partitions
+		-Can increase or decrease number of partitions
+		-Runs slower but results in equal partitions
+	-Coalesce
+		-Avoids doing a full shuffle by using existing partitions 
+		-Can only decrease num of partitions
+		-runs faster but can result in uneven partitions
+
+What’s a shuffle?
+	-Moving data between partitions
+
+What is a logical plan vs a physical plan?
+	-Logical Plan - Abstract of all transformation steps that need to be performed
+		-Spark Context generates and stores it.
+		-Used to figure out the most optomized plan
+	-Physical Plan
+		-How the logical plan is executed acorss the cluster
+		-compares execution strategies and then selects the best one to actually do
+
+What is a driver?
+	-Runs main method of application
+	-Creates the DAG
+	-Requests cluster manager to allocate resources for processing
+	-sends spark-context to executor nodes
+
+What is an executor?
+	-Worker nodes that are distrbuted across the cluster
+	-Process the logic of the program
+	
+
+When would you use a broadcast join?
+	-When you have a small table that you are going to join against a large table
+	
+What is a broadcast variable?
+	-Varible that is loaded into driver and sent to all executors
+
+What is accumulator?
+	-Shared variables that spark creates to perform counters or sum operations
+
+Spark Streaming vs Structured Streaming
+	-Spark Streaming - powered by spark RDDs, divides stream into chunks of RDDs, intial streaming fuction in spark
+	-Processes data streams in micro batches
+	-Strucured Streaming - Uses DataFrames and DataSets API, gives you the ability to do SQL query or Scala operations on streaming data as its recieved
+	-Has "real" streaming unlike Spark-Streaming
+	-Has end-to-end gurantees to recover from errors
+	
+What is Dynamic Partition Pruning?
+	-Feature where partions where irrelevant partions are automatically filtered out from processing
+
+Cache v/s persist
+	-Cache uses default storarge level
+		-RDD == MEMORY_ONLY
+		-Dataset == MEMORY_AND_DISK 
+	-Persist can specify which storage level to use
+
+Advantages n disadvantages of big data File formats
+	-CSV, Text Files, Avro (Row based files)
+		- Can read blocks from anywhere and know schema
+		- Schema can change over time
+		- Can add or remove records from a column easier
+	-Parquet (Column Based)
+		- When working with data, if you only need a subset of columns
+			-Compression algorithms work better
+			-Similar data is stored together in order
+			-Less data is read overall
+
+what are compression formats and its specialities
+	-GZIP
+		-Used for cold data == data used infrequently
+		-Not splittable
+		-Compresses data 30% more compared to snappy and lzo
+	-snappy
+		-has low cpu usage
+		-High storage space
+		-"often performs better than lzo"
+	-lzo
+		-Decompression speeds 
+
+Spark optimization techniques. Share use case
+	-Using coalesce instead of repartition, could use if you were going to write all partitions to a single file
+	-salting keys to make partions to make them more even (assuming theyre uneven in the first place)
+	-Using broadcast joins to reduce shuffling of data
+
+Spark performance tuning. Share use case
+	-Usin Datasets and Frames over RDDs as they inhernetly implement optomization techniques
+	-Using coalesce over repartition - reduces shuffling
+	-Using serialized data formats - transofrmations done on serialized data is faster than text data
+		-Avro, Kryo, Parquet
+	-caching data 
+	-using mappartitions() over map() - does mapping once on partitions instead of every row
+
+Challenges faced in spark projects you worked on?
+	-Ive had issues in the past with constantly running into out of memory errors in the past, This led to me learning how to optomize memory usage and spark performance tuning
+
+
+What is OOM error ? what are the possible reasons ?
+	-Error that occurs when driver or executor runs out of space to execute functions
+		-Driver
+			-Calling collect and bringing in too much data into driver node
+			-Using a table thats too big for a broadcast join
+			-Having skewed partions
+		-Exeutors
+			-Having too many partitions
+			-Having too many cores on a node
+			-not giving YARN enough memory
+
+How does Spark memory management works?
+	-Spark uses a dynamic memory management system =
+		-Reservered - 300MBs
+		- Java Heap 
+			- User Memory = 25%
+			- Spark Memory = 75%
+				-Storage
+				-Executor
+			-Memory is dynamically allocated between the storage and executor according to current needs
+
+How many stages and task are created.
+	
+
+How are executors created in spark.
+	-Dynamically created by cluster manager or spark app master to perform some task
+
+Explain spark-submit common parameters?
+	-Controls memory for x feature of spark
+		-driver-memory
+		-spark.yarn.executor.memoryOverhead
+		-executor-memory
+	-Tells spark to add extra jars/packages to classpath for drivers and executors
+		-jars
+		-packages
+	-class = the main class that containts spark code
+	-master = location of the cluster manager where the application will be submitted to
+	-conf = lets you set all spark configuration properties
+
+
+
+What is data skew? How do you fix it?
+	-Data is not evenly partitoned
+		-Repartition by columns that youre actually using 
+		-Salt your data
+			-Create a column with random value attatched and partiton off that
+		-Bucketing
+			-Hashes data into predefined buckets, making sure they all contain the same amount of data
+
+What is key salting?
+	-Adding a value (usally random) to keys that you want to partition a table on
+	-Used to make partions more equal usaully
+
+What is Adaptive Query Execution?
+	-Optomization technique in spark SQL that uses runtime statistics to choose the most effeicent query execution plan
+		-coalescing post-shuffle partitions
+		-converting sort-merge join to broadcast joins
+		-skew join optomizations
